@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.1.5" use-changelog="false" max-obj-count="9"
+	 last-position="0,0" last-zoom="1" scene-rect="0,0,2520.46,1076.8"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="bank" encoding="UTF8" lc-collate="en_US.utf8" lc-ctype="en_US.utf8" is-template="false" allow-conns="true">
+	<role name="postgres"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" layers="0" rect-visible="true" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<table name="schema_migrations" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="60" y="60"/>
+	<column name="version" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="dirty" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="schema_migrations_pkey" type="pk-constr" table="public.schema_migrations">
+		<columns names="version" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="accounts_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="9223372036854775807" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="accounts" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="500" y="60"/>
+	<column name="id" not-null="true" sequence="public.accounts_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="owner" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="balance" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="currency" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="now()">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<constraint name="accounts_pkey" type="pk-constr" table="public.accounts">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="account_owner_currency_key" type="uq-constr" table="public.accounts">
+		<columns names="owner,currency" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="entries_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="9223372036854775807" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="entries" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1000" y="60"/>
+	<column name="id" not-null="true" sequence="public.entries_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="account_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="amount" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment> <![CDATA[can be negative or positive]]> </comment>
+	</column>
+	<column name="created_at" not-null="true" default-value="now()">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<constraint name="entries_pkey" type="pk-constr" table="public.entries">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="transfers_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="9223372036854775807" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="transfers" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1480" y="60"/>
+	<column name="id" not-null="true" sequence="public.transfers_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="from_account_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="to_account_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="amount" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment> <![CDATA[must be positive]]> </comment>
+	</column>
+	<column name="created_at" not-null="true" default-value="now()">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<constraint name="transfers_pkey" type="pk-constr" table="public.transfers">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="accounts_owner_idx" table="public.accounts"
+	 concurrent="false" unique="false" fast-update="false" buffering="false" nulls-not-distinct="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="owner"/>
+		</idxelement>
+</index>
+
+<index name="entries_account_id_idx" table="public.entries"
+	 concurrent="false" unique="false" fast-update="false" buffering="false" nulls-not-distinct="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="account_id"/>
+		</idxelement>
+</index>
+
+<index name="transfers_from_account_id_idx" table="public.transfers"
+	 concurrent="false" unique="false" fast-update="false" buffering="false" nulls-not-distinct="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="from_account_id"/>
+		</idxelement>
+</index>
+
+<index name="transfers_to_account_id_idx" table="public.transfers"
+	 concurrent="false" unique="false" fast-update="false" buffering="false" nulls-not-distinct="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="to_account_id"/>
+		</idxelement>
+</index>
+
+<index name="transfers_from_account_id_to_account_id_idx" table="public.transfers"
+	 concurrent="false" unique="false" fast-update="false" buffering="false" nulls-not-distinct="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="from_account_id"/>
+		</idxelement>
+		<idxelement use-sorting="false">
+			<column name="to_account_id"/>
+		</idxelement>
+</index>
+
+<table name="test" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="2080" y="60"/>
+	<column name="id" not-null="true" default-value="gen_random_uuid()">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="note" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="now()">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<constraint name="test_pkey" type="pk-constr" table="public.test">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="users" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="60" y="380"/>
+	<column name="username" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="hashed_password" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="full_name" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="password_changed_at" not-null="true" default-value="'0001-01-01 00:00:00+00'">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="now()">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<column name="is_email_verified" not-null="true" default-value="false">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="users_pkey" type="pk-constr" table="public.users">
+		<columns names="username" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="users_email_key" type="uq-constr" table="public.users">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="sessions" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="320" y="720"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="username" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="refresh_token" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="user_agent" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="client_ip" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="is_blocked" not-null="true" default-value="false">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="expires_at" not-null="true">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="now()">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<constraint name="sessions_pkey" type="pk-constr" table="public.sessions">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="verify_emails_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="9223372036854775807" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="verify_emails" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="820" y="440"/>
+	<column name="id" not-null="true" sequence="public.verify_emails_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="username" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="secret_code" not-null="true">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="is_used" not-null="true" default-value="false">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="now()">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<column name="expired_at" not-null="true" default-value="(now() + '00:15:00'::interval)">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<constraint name="verify_emails_pkey" type="pk-constr" table="public.verify_emails">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="accounts_owner_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="SET NULL" ref-table="public.users" table="public.accounts">
+	<columns names="owner" ref-type="src-columns"/>
+	<columns names="username" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="entries_account_id_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="SET NULL" ref-table="public.accounts" table="public.entries">
+	<columns names="account_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="transfers_from_account_id_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="SET NULL" ref-table="public.accounts" table="public.transfers">
+	<columns names="from_account_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="transfers_to_account_id_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="SET NULL" ref-table="public.accounts" table="public.transfers">
+	<columns names="to_account_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="sessions_username_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="SET NULL" ref-table="public.users" table="public.sessions">
+	<columns names="username" ref-type="src-columns"/>
+	<columns names="username" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="verify_emails_username_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.users" table="public.verify_emails">
+	<columns names="username" ref-type="src-columns"/>
+	<columns names="username" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_accounts_users" type="relfk" layers="0"
+	 custom-color="#c4a180"
+	 src-table="public.accounts"
+	 dst-table="public.users" reference-fk="accounts_owner_fkey"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_entries_accounts" type="relfk" layers="0"
+	 custom-color="#b732a8"
+	 src-table="public.entries"
+	 dst-table="public.accounts" reference-fk="entries_account_id_fkey"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_transfers_accounts" type="relfk" layers="0"
+	 custom-color="#ec3acd"
+	 src-table="public.transfers"
+	 dst-table="public.accounts" reference-fk="transfers_from_account_id_fkey"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_transfers_accounts1" type="relfk" layers="0"
+	 custom-color="#35a214"
+	 src-table="public.transfers"
+	 dst-table="public.accounts" reference-fk="transfers_to_account_id_fkey"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_sessions_users" type="relfk" layers="0"
+	 custom-color="#bb9427"
+	 src-table="public.sessions"
+	 dst-table="public.users" reference-fk="sessions_username_fkey"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_verify_emails_users" type="relfk" layers="0"
+	 custom-color="#bea0db"
+	 src-table="public.verify_emails"
+	 dst-table="public.users" reference-fk="verify_emails_username_fkey"
+	 src-required="false" dst-required="true"/>
+
+</dbmodel>

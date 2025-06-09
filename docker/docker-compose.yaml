@@ -1,0 +1,85 @@
+# version: '3.8'
+
+services:
+  pgadmin:
+    image: 'dpage/pgadmin4'
+    ports:
+      - "5050:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@domain.com
+      PGADMIN_DEFAULT_PASSWORD: test
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    # configs:
+    #   - serrver_json:/pgadmin4/servers.json
+    configs:
+      - source: serrver_json
+        target: /pgadmin4/servers.json
+      # volumes:
+      #   - /work/my/golang/course/backend-master-class-go-postgre-k8s/docker/images/pgAdmin/servers.json:/pgadmin4/servers.json
+      # - ./docker/images:/pgadmin4/servers
+
+      # evans:
+      #   image: ghcr.io/ktr0731/evans:latest
+      #   # arg
+      #   command: "--host host.docker.internal --port 8090 -r repl"
+      #   # command: ["--host", "host.docker.internal", "--port", "\\${SERVER_HOST}", "-r", "repl"]
+      #   # command: "--host host.docker.internal --port ${SERVER_HOST} -r repl"
+      #     # - "evans"
+      #     # - "--host host.docker.internal"
+      #     # - "--port 8090"
+      #     # - "-r"
+      #     # - "repl"
+      #   deploy:
+      #     mode: replicated
+      #     replicas: 1
+      #   environment:
+      #     SERVER_HOST: host.docker.internal
+      #     SERVER_PORT: 8090
+
+  postgres:
+    image: 'postgres:17-alpine'
+    command: "-c log_statement=all"
+    ports:
+      - "5432:5432"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: bank
+    volumes:
+      - /work/my/golang/course/backend-master-class-go-postgre-k8s/postgres/db/:/var/lib/postgresql/data/
+
+  mysql:
+    image: mysql:9
+    ports:
+      - "3306:3306"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+    volumes:
+      - /work/my/golang/course/backend-master-class-go-postgre-k8s/mysql/db/:/var/lib/mysql
+
+  redis:
+    image: redis:8-alpine
+    ports:
+      - "6379:6379"
+
+  mailhog:
+    image: 'mailhog/mailhog:latest'
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+configs:
+  serrver_json:
+    file: /work/my/golang/course/backend-master-class-go-postgre-k8s/docker/images/pgAdmin/server.json
+
+# volumes:

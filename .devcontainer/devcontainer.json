@@ -1,0 +1,99 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/go
+{
+  "name": "Go",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/go:1-1.23-bookworm",
+  // "dockerComposeFile": [
+  //   "../devops/services/docker-compose.yaml",
+  //   "../devops/services/devcontainer.yaml"
+  // ],
+  // "service": "devdevelop",
+  // "workspaceFolder": "/workspace/code",
+  // "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "alefragnani.Bookmarks",
+        "xyz.local-history",
+        "L13RARY.l13-diff",
+        "eamodio.gitlens",
+        "ms-azuretools.vscode-docker",
+        "msyrus.go-doc",
+        "jinliming2.vscode-go-template",
+        "casualjim.gotemplate",
+        "cweijan.vscode-mysql-client2",
+        "peterj.proto",
+        "ms-vscode.makefile-tools",
+        "zxh404.vscode-proto3",
+        "cweijan.vscode-redis-client"
+      ]
+    }
+  },
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [
+    8080
+  ],
+  "features": {
+    // https: //github.com/microsoft/vscode-dev-containers/blob/main/script-library/docs/docker-in-docker.md
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    // "ghcr.io/devcontainers-contrib/features/protoc:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers-extra/features/protoc:1": {}
+  },
+  "runArgs": [
+    "--network=host"
+  ],
+  // "build": {
+  //   "args": {
+  //     "network": "host"
+  //   }
+  // }
+
+// Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "go version"
+  "postCreateCommand": "./.devcontainer/setup.sh"
+
+  // "postCreateCommand": "go mod download && go install github.com/air-verse/air@latest"
+// Configure tool-specific properties.
+// "customizations": {},
+// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+// "remoteUser": "root"
+  // "mounts": [
+  //       // Source code
+  //       {
+  //           "source": "../",
+  //           "target": "/workspace",
+  //           "type": "bind"
+  //       },
+  //       // Zsh commands history persistence
+  //       {
+  //           "source": "${localEnv:HOME}/.zsh_history",
+  //           "target": "/root/.zsh_history",
+  //           "type": "bind"
+  //       },
+  //       // Git configuration file
+  //       {
+  //           "source": "${localEnv:HOME}/.gitconfig",
+  //           "target": "/root/.gitconfig",
+  //           "type": "bind"
+  //       },
+  //       // SSH directory for Linux, OSX and WSL
+  //       // On Linux and OSX, a symlink /mnt/ssh <-> ~/.ssh is
+  //       // created in the container. On Windows, files are copied
+  //       // from /mnt/ssh to ~/.ssh to fix permissions.
+  //       {
+  //           "source": "${localEnv:HOME}/.ssh",
+  //           "target": "/mnt/ssh",
+  //           "type": "bind"
+  //       },
+  //       // Docker socket to access the host Docker server
+  //       {
+  //           "source": "/var/run/docker.sock",
+  //           "target": "/var/run/docker.sock",
+  //           "type": "bind"
+  //       }
+  //   ]
+}

@@ -1,0 +1,15 @@
+{
+  // "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.associations": {
+    "*.gohtml": "html"
+  },
+  "protoc": {
+    "options": [
+      "--proto_path=proto"
+    ]
+  },
+  "go.testFlags": [
+    "-v",
+    "-count=1"
+  ]
+}
