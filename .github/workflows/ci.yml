@@ -47,4 +47,8 @@ jobs:
       run: make migrate-up db=postgresql://postgres:test@localhost:5434/bank?sslmode=disable
 
     - name: Test db
-      run: make test-db
+      run: |
+        cp ./app.env.dist ./app.env
+        make test-db
+      env:
+        DB_SOURCE: postgresql://postgres:test@localhost:5434/bank?sslmode=disable
