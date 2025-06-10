@@ -26,7 +26,8 @@
         "peterj.proto",
         "ms-vscode.makefile-tools",
         "zxh404.vscode-proto3",
-        "cweijan.vscode-redis-client"
+        "cweijan.vscode-redis-client",
+        "github.vscode-github-actions"
       ]
     }
   },

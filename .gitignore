@@ -5,3 +5,4 @@ mysql/db
 postgres/db
 
 **/.env
+actions-runner

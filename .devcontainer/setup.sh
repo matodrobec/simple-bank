@@ -25,12 +25,12 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 go install github.com/ktr0731/evans@latest
 
 
-echo "Installing grpc-gateway..."
+# echo "Installing grpc-gateway..."
 go install \
     github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
     github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
-    google.golang.org/protobuf/cmd/protoc-gen-go \
-    google.golang.org/grpc/cmd/protoc-gen-go-grpc
+    google.golang.org/protobuf/cmd/protoc-gen-go
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 echo "Installing serve static files..."
 go install github.com/rakyll/statik
