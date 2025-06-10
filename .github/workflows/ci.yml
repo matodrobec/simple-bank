@@ -25,6 +25,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5434:5432
 
     steps:
     - uses: actions/checkout@v4
@@ -41,7 +44,7 @@ jobs:
         which migrate
 
     - name: Run migration
-      run: make migrate-up db=postgresql://postgres:test@postgres:5432/bank?sslmode=disable
+      run: make migrate-up db=postgresql://postgres:test@localhost:5434/bank?sslmode=disable
 
     - name: Test db
       run: go test-db -v ./...
