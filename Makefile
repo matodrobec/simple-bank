@@ -1,7 +1,8 @@
 name ?= init_schema  # Default value, can be overridden
 type=gin
 port=8090
-DB_URL=postgresql://postgres:test@localhost:5432/bank?sslmode=disable
+db=postgresql://postgres:test@localhost:5432/bank?sslmode=disable
+scale=1
 
 docker-compose:
 	docker compose -p bank -f ./docker/docker-compose.yaml up -d --build
@@ -11,6 +12,10 @@ docker-compose-down:
 
 docker-compose-pbmodeler:
 	docker compose -p bank -f ./docker/docker-compose-pgmodeler.yaml up -d --build
+
+docker-compose-runner:
+	docker compose -p bank -f ./docker/docker-compose-runner.yaml up --scale runner=$(scale) -d --build
+
 
 docker-compose-pbmodeler-down:
 	docker compose -p bank -f ./docker/docker-compose-pgmodeler.yaml down
@@ -39,13 +44,13 @@ db-drop:
 migrate: migrate-up sqlc-gen mock
 
 migrate-up:
-	migrate --path db/migration --database "$(DB_URL)" --verbose up
+	migrate --path db/migration --database "$(db)" --verbose up
 
 migrate-down:
-	migrate --path db/migration --database "$(DB_URL)" --verbose down
+	migrate --path db/migration --database "$(db)" --verbose down
 
 migrate-down-last:
-	migrate --path db/migration --database "$(DB_URL)" --verbose down 1
+	migrate --path db/migration --database "$(db)" --verbose down 1
 
 migrate-create:
 	migrate create -ext sql -dir db/migration -seq $(name)
@@ -57,6 +62,9 @@ sqlc-gen:
 
 test:
 	go test -v -cover -short ./db/... ./api/... ./util/... ./mail/...
+
+test-db:
+	go test -v -cover -short ./db/...
 
 server:
 	go run main.go $(type)

@@ -1,0 +1,16 @@
+
+services:
+  runner:
+    image: github-docker-runner
+    build:
+      context: ./images/github-actions-docker
+      dockerfile: Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - ./.env
+
+
