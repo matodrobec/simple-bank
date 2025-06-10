@@ -47,4 +47,4 @@ jobs:
       run: make migrate-up db=postgresql://postgres:test@localhost:5434/bank?sslmode=disable
 
     - name: Test db
-      run: go test-db -v ./...
+      run: make test-db
