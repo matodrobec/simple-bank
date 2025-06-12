@@ -35,6 +35,13 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 echo "Installing serve static files..."
 go install github.com/rakyll/statik
 
+
+echo "Installing aws cli"
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+unzip /tmp/awscliv2.zip
+sudo ./aws/install
+rm -r /tmp/aws /tmp/awscliv2.zip
+
 echo "Setup complete!"
 
 

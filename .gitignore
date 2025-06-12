@@ -1,6 +1,7 @@
 readme.md
 app.env
 .history
+.aws
 mysql/db
 postgres/db
 postgres/pgmodeler

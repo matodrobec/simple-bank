@@ -11,6 +11,7 @@ COPY --from=builder /app/db/migration ./db/migration
 COPY --from=builder /app/main .
 COPY ./docker/images/app/start.sh .
 COPY ./wait-for.sh .
+COPY app.env .
 
 RUN chmod +x start.sh wait-for.sh
 
