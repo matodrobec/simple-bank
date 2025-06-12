@@ -3,6 +3,9 @@ app.env
 .history
 mysql/db
 postgres/db
+postgres/pgmodeler
 
 **/.env
 actions-runner
+
+
