@@ -1,6 +1,32 @@
 # version: '3.8'
 
 services:
+  app:
+    image: simplebank:latest
+    build:
+      context: ./..
+      dockerfile: ./docker/images/app/Dockerfile
+    entrypoint: ["/app/wait-for.sh", "postgres:5432", "--", "/app/start.sh"]
+    command: [ "/app/main" ]
+    ports:
+      - "8089:8080"
+      - "8099:8090"
+    configs:
+      - source: app_env
+        target: /app/app.env
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DB_SOURCE: postgresql://postgres:test@postgres:5432/bank?sslmode=disable
+      REDIS_ADDRESS: redis:6379
+      SMTP_HOST: mailhog
+    depends_on:
+      - postgres
+      - redis
+    # env_file:
+    #   - ../app.env
+
   pgadmin:
     image: 'dpage/pgadmin4'
     ports:
@@ -55,17 +81,17 @@ services:
     volumes:
       - /work/my/golang/course/backend-master-class-go-postgre-k8s/postgres/db/:/var/lib/postgresql/data/
 
-  mysql:
-    image: mysql:9
-    ports:
-      - "3306:3306"
-    deploy:
-      mode: replicated
-      replicas: 1
-    environment:
-      MYSQL_ROOT_PASSWORD: test
-    volumes:
-      - /work/my/golang/course/backend-master-class-go-postgre-k8s/mysql/db/:/var/lib/mysql
+  # mysql:
+  #   image: mysql:9
+  #   ports:
+  #     - "3306:3306"
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: test
+  #   volumes:
+  #     - /work/my/golang/course/backend-master-class-go-postgre-k8s/mysql/db/:/var/lib/mysql
 
   redis:
     image: redis:8-alpine
@@ -81,5 +107,7 @@ services:
 configs:
   serrver_json:
     file: /work/my/golang/course/backend-master-class-go-postgre-k8s/docker/images/pgAdmin/server.json
+  app_env:
+    file: /work/my/golang/course/backend-master-class-go-postgre-k8s/app.env
 
 # volumes:

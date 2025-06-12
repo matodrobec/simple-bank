@@ -16,6 +16,8 @@ docker-compose-pbmodeler:
 docker-compose-runner:
 	docker compose -p bank -f ./docker/docker-compose-runner.yaml up --scale runner=$(scale) -d --build
 
+docker-build:
+	docker build -f ./docker/images/app/Dockerfile -t simplebank:latest .
 
 docker-compose-pbmodeler-down:
 	docker compose -p bank -f ./docker/docker-compose-pgmodeler.yaml down

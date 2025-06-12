@@ -1,0 +1,6 @@
+.history
+.vscode
+.devcontainers
+actions-runner
+mysql
+postgres

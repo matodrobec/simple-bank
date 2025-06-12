@@ -146,7 +146,8 @@ func runTaskProcessor(
 	store db.Store,
 	config util.Config,
 ) {
-	mailer := mail.NewGenericSender(config)
+	// mailer := mail.NewGenericSender(config)
+	mailer := mail.NewSmtpSender(config)
 	runTaskProcessor := worker.NewRedisTaskProcessor(
 		redisOpt, store, mailer, config,
 	)
