@@ -109,7 +109,7 @@ func main() {
 
 	waitGroup, ctx := errgroup.WithContext(ctx)
 
-	runTaskProcessor(ctx, waitGroup, redisOpt, store, config)
+	// runTaskProcessor(ctx, waitGroup, redisOpt, store, config)
 	runGatewayServer(ctx, waitGroup, config, store, taskDistributor)
 	runGrpcServer(ctx, waitGroup, config, store, taskDistributor)
 
@@ -147,7 +147,8 @@ func runTaskProcessor(
 	config util.Config,
 ) {
 	// mailer := mail.NewGenericSender(config)
-	mailer := mail.NewSmtpSender(config)
+	// mailer := mail.NewSmtpSender(config)
+	mailer := mail.NewGmailSender(config.GetFromName(), config.GetFromEmailAddress(), config.GetSmtpPassword())
 	runTaskProcessor := worker.NewRedisTaskProcessor(
 		redisOpt, store, mailer, config,
 	)
