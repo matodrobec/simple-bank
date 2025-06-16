@@ -37,10 +37,30 @@ go install github.com/rakyll/statik
 
 
 echo "Installing aws cli"
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
-unzip /tmp/awscliv2.zip
+pushd /tmp
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "./awscliv2.zip"
+unzip ./awscliv2.zip
 sudo ./aws/install
-rm -r /tmp/aws /tmp/awscliv2.zip
+rm -r ./aws ./awscliv2.zip
+popd
+
+# if [[ -f "/path/to/file" ]]; then
+#     export AWS_CONFIG_FILE=/custom/path/config
+#     export AWS_SHARED_CREDENTIALS_FILE=/custom/path/credentials
+# fi
+
+echo "Install kubectl"
+sudo apt-get install bash-completion
+echo 'source <(kubectl completion bash)' >>~/.bashrc
+echo 'alias k=kubectl' >>~/.bashrc
+echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
+
+echo "Install k9s"
+go install github.com/derailed/k9s@latest
+# wget https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.deb && apt install ./k9s_linux_amd64.deb && rm k9s_linux_amd64.deb
+
+
+
 
 echo "Setup complete!"
 

@@ -2,6 +2,7 @@ readme.md
 app.env
 .history
 .aws
+.kube
 mysql/db
 postgres/db
 postgres/pgmodeler
@@ -9,4 +10,4 @@ postgres/pgmodeler
 **/.env
 actions-runner
 
-
+*.env.*
