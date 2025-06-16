@@ -109,7 +109,7 @@ func main() {
 
 	waitGroup, ctx := errgroup.WithContext(ctx)
 
-	// runTaskProcessor(ctx, waitGroup, redisOpt, store, config)
+	runTaskProcessor(ctx, waitGroup, redisOpt, store, config)
 	runGatewayServer(ctx, waitGroup, config, store, taskDistributor)
 	runGrpcServer(ctx, waitGroup, config, store, taskDistributor)
 

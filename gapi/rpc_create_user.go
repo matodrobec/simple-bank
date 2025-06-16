@@ -2,11 +2,14 @@ package gapi
 
 import (
 	"context"
+	"time"
 
+	"github.com/hibiken/asynq"
 	db "github.com/matodrobec/simplebank/db/sqlc"
 	"github.com/matodrobec/simplebank/pb"
 	"github.com/matodrobec/simplebank/util"
 	"github.com/matodrobec/simplebank/validation"
+	"github.com/matodrobec/simplebank/worker"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -35,23 +38,23 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 
 	txArg := db.CreateUserTxParams{
 		CreateUserParams: arg,
-		AfterCreate: func(user db.User) error {
-			return nil
-		},
 		// AfterCreate: func(user db.User) error {
-		// 	opts := []asynq.Option{
-		// 		asynq.MaxRetry(10),
-		// 		// we ned this time because transaction is commit after AfterCraete
-		// 		// there is transaction commit
-		// 		// without 10s delay can happen that user is not commited into DB
-		// 		asynq.ProcessIn(2 * time.Second),
-		// 		asynq.Queue(worker.QueueCritical),
-		// 	}
-		// 	taskPayload := &worker.PayloadSendVerifyEmail{
-		// 		Username: user.Username,
-		// 	}
-		// 	return server.taskDistributor.DistributedTaskSendEmail(ctx, taskPayload, opts...)
+		// 	return nil
 		// },
+		AfterCreate: func(user db.User) error {
+			opts := []asynq.Option{
+				asynq.MaxRetry(10),
+				// we ned this time because transaction is commit after AfterCraete
+				// there is transaction commit
+				// without 10s delay can happen that user is not commited into DB
+				asynq.ProcessIn(2 * time.Second),
+				asynq.Queue(worker.QueueCritical),
+			}
+			taskPayload := &worker.PayloadSendVerifyEmail{
+				Username: user.Username,
+			}
+			return server.taskDistributor.DistributedTaskSendEmail(ctx, taskPayload, opts...)
+		},
 	}
 
 	// user, err := server.store.CreateUser(ctx, arg)
